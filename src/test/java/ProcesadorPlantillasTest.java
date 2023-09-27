@@ -27,7 +27,7 @@ public class ProcesadorPlantillasTest {
     }
 
     @Test
-    void procesarPlantillaVacia() {
+    void debeProcesarPlantillaVacia() {
         when(proveedorMiembrosPlanilla.obtenerListaEmpleados()).thenReturn(new ArrayList<>());
         float totalAPagar = procesadorPlantillas.procesarPlantilla();
         assertEquals(new Float(0), totalAPagar);
@@ -35,7 +35,16 @@ public class ProcesadorPlantillasTest {
     }
 
     @Test
-    void procesarPlantillaActivos() {
+    void debeFallarPlantillaNule() {
+        when(proveedorMiembrosPlanilla.obtenerListaEmpleados()).thenReturn(null);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> procesadorPlantillas.procesarPlantilla());
+        assertTrue(exception.getMessage().contains("No se puede procesar lista nula"));
+        verify(proveedorMiembrosPlanilla, times(1)).obtenerListaEmpleados();
+    }
+
+    @Test
+    void debeProcesarPlantillaActivos() {
         when(proveedorMiembrosPlanilla.obtenerListaEmpleados()).thenReturn(generarEmpleadosActivos());
         float totalAPagar = procesadorPlantillas.procesarPlantilla();
         assertEquals(new Float(27500), totalAPagar);
@@ -43,7 +52,7 @@ public class ProcesadorPlantillasTest {
     }
 
     @Test
-    void procesarPlantillaInactivos() {
+    void debeProcesarPlantillaInactivos() {
         when(proveedorMiembrosPlanilla.obtenerListaEmpleados()).thenReturn(generarEmpleadosInactivos());
         float totalAPagar = procesadorPlantillas.procesarPlantilla();
         assertEquals(new Float(0), totalAPagar);
@@ -51,7 +60,7 @@ public class ProcesadorPlantillasTest {
     }
 
     @Test
-    void procesarPlantillaActivosInactivos() {
+    void debeProcesarPlantillaActivosInactivos() {
         when(proveedorMiembrosPlanilla.obtenerListaEmpleados()).thenReturn(generarEmpleadosActivosInactivos());
         float totalAPagar = procesadorPlantillas.procesarPlantilla();
         assertEquals(new Float(12500), totalAPagar);
@@ -59,7 +68,7 @@ public class ProcesadorPlantillasTest {
     }
 
     @Test
-    void procesarPlantillaActivosIdInvalido() {
+    void debeFallarPlantillaActivosIdInvalido() {
         when(proveedorMiembrosPlanilla.obtenerListaEmpleados()).thenReturn(generarEmpleadosIdInvalido());
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> procesadorPlantillas.procesarPlantilla());
@@ -68,7 +77,7 @@ public class ProcesadorPlantillasTest {
     }
 
     @Test
-    void procesarPlantillaActivosMontoInvalido() {
+    void debeFallarPlantillaActivosMontoInvalido() {
         when(proveedorMiembrosPlanilla.obtenerListaEmpleados()).thenReturn(generarEmpleadosMontoInvalido());
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> procesadorPlantillas.procesarPlantilla());
@@ -77,7 +86,7 @@ public class ProcesadorPlantillasTest {
     }
 
     @Test
-    void procesarPlantillaActivosNombreNulo() {
+    void debeFallarPlantillaActivosNombreNulo() {
         when(proveedorMiembrosPlanilla.obtenerListaEmpleados()).thenReturn(generarEmpleadosNombreNulo());
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> procesadorPlantillas.procesarPlantilla());
@@ -86,7 +95,7 @@ public class ProcesadorPlantillasTest {
     }
 
     @Test
-    void procesarPlantillaActivosNombreVacio() {
+    void debeFallarPlantillaActivosNombreVacio() {
         when(proveedorMiembrosPlanilla.obtenerListaEmpleados()).thenReturn(generarEmpleadosNombreVacio());
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> procesadorPlantillas.procesarPlantilla());

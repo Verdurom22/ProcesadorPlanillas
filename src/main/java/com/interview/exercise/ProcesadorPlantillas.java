@@ -18,6 +18,9 @@ public class ProcesadorPlantillas {
         float aPagar = new Float(0);
         final float[] totalAPagar = {0};
         List<Empleado> empleados = proveedorMiembrosPlanilla.obtenerListaEmpleados();
+        if(empleados == null) {
+            throw new IllegalArgumentException("No se puede procesar lista nula");
+        }
         empleados.stream().filter(Empleado::isActivo).forEach(e -> {
             if(e.getId() == 0) {
                 throw new IllegalArgumentException("ID inválido: " +
